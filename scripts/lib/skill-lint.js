@@ -7,8 +7,6 @@
  * wrapper over it. Splitting the rules out of the CLI keeps them importable
  * and unit-testable without spawning a process or touching the filesystem.
  *
- * Ported from addyosmani/agent-skills (scripts/lib/skill-lint.js).
- *
  * Checks (errors block CI):
  *   - SKILL.md exists in every skill directory
  *   - YAML frontmatter present with 'name' and 'description' fields

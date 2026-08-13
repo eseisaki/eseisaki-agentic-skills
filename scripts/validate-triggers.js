@@ -2,13 +2,11 @@
 /**
  * validate-triggers.js — Tier 2 trigger-routing check for this pack.
  *
- * Adapted from the deterministic tier of addyosmani/agent-skills'
- * scripts/run-evals.js. That original combines a Tier-2 deterministic
- * routing/collision check with a Tier-3 behavioral runner that spawns
- * headless `claude -p` executions against fixtures. This repo's create-skill
- * workflow runs behavioral evals live (by hand or via a subagent) instead of
- * through an automated grading pipeline, so only the deterministic tier is
- * ported here — see evals/cases/README.md for the case file format.
+ * Deterministic, lexical check that a skill's description carries the
+ * vocabulary users actually say and doesn't collide with another skill's.
+ * Behavioral evals (does the skill actually do what it claims) are run live
+ * by the create-skill workflow instead of through an automated grading
+ * pipeline — see evals/README.md for the case file format.
  *
  * Checks, for every evals/cases/<skill>.json:
  *   - Coverage: every skill in skills/ has a case file, and vice versa.

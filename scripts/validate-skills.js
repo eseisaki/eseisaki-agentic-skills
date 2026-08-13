@@ -8,8 +8,6 @@
  * wrapper that walks the skills directory, runs the linter, prints the report,
  * and sets the exit code.
  *
- * Ported from addyosmani/agent-skills (scripts/validate-skills.js).
- *
  * Exit codes: 0 = all clear, 1 = one or more errors
  */
 

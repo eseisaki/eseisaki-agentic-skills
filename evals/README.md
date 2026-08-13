@@ -1,6 +1,6 @@
 # Skill Evals
 
-How this repo checks that a skill triggers when it should and does what it says. Adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)'s three-tier eval system, trimmed to what's worth maintaining while this pack is small — see `docs/skill-anatomy.md` for the structural rules these evals sit on top of, and the `create-skill` skill for the workflow that produces them.
+How this repo checks that a skill triggers when it should and does what it says, sized to what's worth maintaining while this pack is small — see `docs/skill-anatomy.md` for the structural rules these evals sit on top of, and the `create-skill` skill for the workflow that produces them.
 
 ## The tiers
 
@@ -10,7 +10,7 @@ How this repo checks that a skill triggers when it should and does what it says.
 | 2. Trigger routing | Positive prompts rank their skill top-k; negative prompts don't; no two descriptions collide | `node scripts/validate-triggers.js` |
 | 3. Behavioral | An agent following the skill satisfies its `expectations[]` | Run live, by hand or via a subagent — no automated grader |
 
-Tiers 1 and 2 are deterministic, zero-dependency Node scripts, ported from Osmani's originals. Tier 3 is intentionally **not** automated here: the original's behavioral runner spins up throwaway git workspaces, materializes fixtures, and grades a `claude -p` execution trace with a second `claude -p` call — real infra worth the cost once a pack has many skills and needs CI-safe regression checks, but overkill for a small, actively-authored one. Instead, `create-skill` has you (or a subagent) run each behavioral eval prompt directly against the drafted skill and judge the `expectations[]` yourself, using the case file as the record of what was checked.
+Tiers 1 and 2 are deterministic, zero-dependency Node scripts. Tier 3 is intentionally **not** automated here: a fully automated behavioral runner — spinning up throwaway workspaces, materializing fixtures, grading an execution trace with a second model call — is real infra worth the cost once a pack has many skills and needs CI-safe regression checks, but overkill for a small, actively-authored one. Instead, `create-skill` has you (or a subagent) run each behavioral eval prompt directly against the drafted skill and judge the `expectations[]` yourself, using the case file as the record of what was checked.
 
 Tier 2 is a lexical approximation (stemmed TF-IDF over descriptions) — it catches a description missing the vocabulary users actually say, or one so broad it outranks the skill that should own a prompt. It cannot judge semantics; that's what Tier 3 is for. Note it's also close to a no-op with only one or two skills in the catalog — there's nothing to collide with yet — but it costs nothing to run and starts paying off as the pack grows.
 

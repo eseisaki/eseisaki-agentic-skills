@@ -5,7 +5,7 @@
       { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "top_k": 1 },
       { "prompt": "help me write a SKILL.md for onboarding new agents onto our deploy process", "top_k": 1 },
       { "prompt": "my skill never triggers when I expect it to, the description is probably wrong, can you fix it", "top_k": 1 },
-      { "prompt": "I want to create a new agent skill but the full skill-creator process is way more than I need", "top_k": 1 }
+      { "prompt": "I want to create a new agent skill but the full benchmark-and-iterate process is way more than I need", "top_k": 1 }
     ],
     "negative": [
       { "prompt": "restart the postgres container, it's stuck in a crash loop" },

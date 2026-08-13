@@ -1,0 +1,30 @@
+{
+  "skill_name": "create-skill",
+  "trigger": {
+    "positive": [
+      { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "top_k": 1 },
+      { "prompt": "help me write a SKILL.md for onboarding new agents onto our deploy process", "top_k": 1 },
+      { "prompt": "my skill never triggers when I expect it to, the description is probably wrong, can you fix it", "top_k": 1 },
+      { "prompt": "I want to create a new agent skill but the full skill-creator process is way more than I need", "top_k": 1 }
+    ],
+    "negative": [
+      { "prompt": "restart the postgres container, it's stuck in a crash loop" },
+      { "prompt": "why is nginx returning a 502 on the checkout page" },
+      { "prompt": "optimize this SQL query, it's scanning the whole orders table" }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Turn this into a skill: whenever I paste a stack trace, look up the error in our internal runbook docs, summarize the likely cause, and suggest the fix from the runbook before touching any code.",
+      "expected_output": "A drafted skills/<name>/SKILL.md following docs/skill-anatomy.md's structure, plus an evals/cases/<name>.json with at least 3 positive and 2 negative trigger prompts and 1 behavioral eval, created only after a short intent-confirmation exchange with the user.",
+      "expectations": [
+        "The agent asks a short clarifying question (or confirms extracted intent) before drafting, rather than drafting immediately",
+        "The drafted SKILL.md has valid frontmatter with a description containing a 'Use when' clause",
+        "The drafted SKILL.md includes the required sections from docs/skill-anatomy.md (Overview, When to Use, Common Rationalizations, Red Flags, Verification)",
+        "An evals/cases/<name>.json file is created with the required trigger and evals structure",
+        "The agent runs (or proposes running) node scripts/validate-skills.js and node scripts/validate-triggers.js before declaring the skill done"
+      ]
+    }
+  ]
+}

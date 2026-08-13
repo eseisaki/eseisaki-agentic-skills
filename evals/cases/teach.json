@@ -1,0 +1,31 @@
+{
+  "skill_name": "teach",
+  "trigger": {
+    "positive": [
+      { "prompt": "teach me Rust — I want to actually get good at it, not just read about it", "top_k": 1 },
+      { "prompt": "/teach watercolor painting", "top_k": 1 },
+      { "prompt": "I want to learn strength training properly over the next few months, can you set up something ongoing to guide me", "top_k": 1 },
+      { "prompt": "can we pick up where we left off learning Spanish grammar", "top_k": 1 }
+    ],
+    "negative": [
+      { "prompt": "restart the postgres container, it's stuck in a crash loop" },
+      { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "owner": "create-skill" },
+      { "prompt": "optimize this SQL query, it's scanning the whole orders table" }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/teach the basics of chess openings — I've never played before and want to actually get better, not just read a summary",
+      "expected_output": "The agent treats the current directory as a teaching workspace: interviews the user for a concrete mission before writing anything, writes MISSION.md once confirmed, checks/populates RESOURCES.md with real trusted sources, then produces one short self-contained HTML lesson file under lessons/ (numbered 0001-<slug>.html) scoped to a single tightly-scoped opening concept, tied to the mission, citing a primary source, and ending with a prompt to ask follow-up questions.",
+      "expectations": [
+        "The agent asks about the user's underlying goal (why chess openings, what 'better' looks like) before drafting a lesson, rather than jumping straight to content",
+        "MISSION.md is created following the Why / Success looks like / Constraints / Out of scope structure and is confirmed with the user",
+        "RESOURCES.md is created or checked before the lesson is written, with at least one annotated, high-trust source",
+        "Exactly one lesson is produced as a single self-contained HTML file in lessons/, named with the 0001-<slug>.html numbering convention, scoped to one tightly-scoped idea rather than all of chess openings at once",
+        "The lesson links to a primary source and includes a reminder that the user can ask follow-up questions",
+        "No glossary term or learning record is added purely on exposure — only if the user demonstrates understanding during the exchange"
+      ]
+    }
+  ]
+}

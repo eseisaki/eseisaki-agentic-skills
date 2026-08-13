@@ -30,7 +30,7 @@ Check what already exists in checkable artifacts — specs, plans, ADRs, issues,
 
 ### 3. Write the document
 
-Save it to `~/.claude/handoffs/<sanitized-project-dir>/handoff.md`, where `<sanitized-project-dir>` is the project's root path with every `/` replaced by `-` — never into the project workspace. This fixed, per-project location is what the `SessionStart` hook checks to auto-load the handoff into a fresh session; overwrite any existing file there. Include:
+Save it to the scratchpad/temp directory for this OS session (see the "Scratchpad Directory" note in your environment info if present; otherwise the OS temp dir) — never into the project workspace. Include:
 
 - **Goal** — what the overall task is trying to achieve.
 - **State** — what's done, what's in progress, what's left. Reference artifacts by path/URL rather than re-describing their content.
@@ -44,7 +44,7 @@ Scan the draft for secrets or sensitive data — API keys, tokens, passwords, cr
 
 ### 5. Report the path
 
-Tell the user the file path so they (or the next agent) can find it. Mention that a `SessionStart` hook will auto-load it into the next session opened in this project, so they don't have to point Claude at it manually. Don't print the full document contents into the chat unless asked.
+Tell the user the file path so they (or the next agent) can find it. Don't print the full document contents into the chat unless asked.
 
 ## Common Rationalizations
 
@@ -52,19 +52,19 @@ Tell the user the file path so they (or the next agent) can find it. Mention tha
 |---|---|
 | "I'll just paste the plan into the handoff doc too" | If the plan already lives in a file, commit, or issue, duplicating it drifts out of sync the moment either copy changes. Link to it instead. |
 | "No need to check for secrets, this is just an internal summary" | Handoff docs get read by other agents and sometimes shared outside the original context — redact regardless of where it's headed. |
-| "I'll save it in the repo so it's easy to find" | That turns a one-time transfer artifact into repo clutter. Use the fixed `~/.claude/handoffs/<sanitized-project-dir>/` location and report the path instead — it's what the `SessionStart` hook reads to auto-load it next time. |
+| "I'll save it in the repo so it's easy to find" | That turns a one-time transfer artifact into repo clutter. Use the temp/scratchpad location and report the path instead. |
 
 ## Red Flags
 
 - The handoff document re-explains content that's already in a spec, plan, commit message, or PR description.
 - Secrets, tokens, or credentials appear in the draft unredacted.
-- The document is saved inside the project workspace, or anywhere other than `~/.claude/handoffs/<sanitized-project-dir>/handoff.md`.
+- The document is saved inside the project workspace instead of a temp/scratchpad location.
 - No "suggested skills" section, leaving the next agent to rediscover which skills apply.
 
 ## Verification
 
 - [ ] Document references existing artifacts by path/URL instead of duplicating their content
 - [ ] Secrets and PII are redacted
-- [ ] Saved to `~/.claude/handoffs/<sanitized-project-dir>/handoff.md`, not the project workspace
+- [ ] Saved outside the project workspace (temp/scratchpad directory)
 - [ ] Includes a "Suggested skills" section
 - [ ] User was told the file path

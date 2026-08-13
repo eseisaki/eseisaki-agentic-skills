@@ -18,9 +18,9 @@
     {
       "id": 1,
       "prompt": "/handoff picking up the API rate-limiting bug tomorrow morning",
-      "expected_output": "The agent writes a handoff document to ~/.claude/handoffs/<sanitized-project-dir>/handoff.md (not the project workspace) summarizing the rate-limiting bug work: goal, current state, decisions made, open questions, and a suggested-skills section — referencing any existing plan/commit/issue by path or URL rather than re-describing their content, with secrets redacted, then reports the file path to the user without dumping the full document into chat.",
+      "expected_output": "The agent writes a handoff document to the scratchpad/temp directory (not the project workspace) summarizing the rate-limiting bug work: goal, current state, decisions made, open questions, and a suggested-skills section — referencing any existing plan/commit/issue by path or URL rather than re-describing their content, with secrets redacted, then reports the file path to the user without dumping the full document into chat.",
       "expectations": [
-        "The document is saved to ~/.claude/handoffs/<sanitized-project-dir>/handoff.md, not inside the repo",
+        "The document is saved outside the project workspace (temp or scratchpad directory), not inside the repo",
         "Content already captured in a spec, plan, commit, or issue is referenced by path/URL instead of duplicated in full",
         "The document includes a goal, current state, decisions, and open questions/blockers relevant to the rate-limiting bug",
         "A 'suggested skills' section names specific skills the next session should invoke",

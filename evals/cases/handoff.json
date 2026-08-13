@@ -1,0 +1,33 @@
+{
+  "skill_name": "handoff",
+  "trigger": {
+    "positive": [
+      { "prompt": "/handoff continuing the auth refactor tomorrow", "top_k": 1 },
+      { "prompt": "write up a handoff doc so another agent can pick this up where I left off", "top_k": 1 },
+      { "prompt": "I'm out of time today, write something so another agent can take over this task without me re-explaining everything", "top_k": 1 },
+      { "prompt": "I'm about to switch to a different assistant for this task, give me a note that captures where we're at", "top_k": 1 }
+    ],
+    "negative": [
+      { "prompt": "restart the postgres container, it's stuck in a crash loop" },
+      { "prompt": "teach me Rust — I want to actually get good at it, not just read about it", "owner": "teach" },
+      { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "owner": "create-skill" },
+      { "prompt": "can you just give me a quick summary of what we did in this chat so far" }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/handoff picking up the API rate-limiting bug tomorrow morning",
+      "expected_output": "The agent writes a handoff document to the scratchpad/temp directory (not the project workspace) summarizing the rate-limiting bug work: goal, current state, decisions made, open questions, and a suggested-skills section — referencing any existing plan/commit/issue by path or URL rather than re-describing their content, with secrets redacted, then reports the file path to the user without dumping the full document into chat.",
+      "expectations": [
+        "The document is saved outside the project workspace (temp or scratchpad directory), not inside the repo",
+        "Content already captured in a spec, plan, commit, or issue is referenced by path/URL instead of duplicated in full",
+        "The document includes a goal, current state, decisions, and open questions/blockers relevant to the rate-limiting bug",
+        "A 'suggested skills' section names specific skills the next session should invoke",
+        "Any secrets or credentials visible in the conversation are redacted before saving",
+        "The agent tailors the document around 'picking up the API rate-limiting bug tomorrow morning' since that was passed as the focus",
+        "The agent reports the saved file path to the user rather than pasting the full document into the chat"
+      ]
+    }
+  ]
+}

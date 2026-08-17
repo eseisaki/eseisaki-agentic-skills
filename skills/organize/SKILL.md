@@ -1,23 +1,25 @@
 ---
 name: organize
-description: Runs the user's personal PARA/GTD idea-organizing workflow — capturing raw ideas, filing them into Projects/Areas/Resources/Archive, scoring Projects on Impact/Effort, and running a periodic staleness review — against the ~/Projects/organize repo. Use when the user says /organize, asks to capture or log a new idea, wants help filing their inbox, wants Projects scored or ranked by impact/effort, or wants to run their periodic PARA review.
+description: Runs the user's personal PARA/GTD idea-organizing workflow — capturing raw ideas, filing them into Projects/Areas/Resources/Archive, scoring Projects on Impact/Effort, listing the current Impact/Effort ranking, and running a periodic staleness review — against the ~/Projects/organize repo. Use when the user says /organize, asks to capture or log a new idea, wants help filing their inbox, wants Projects scored, wants to see their current ranked list of Projects, or wants to run their periodic PARA review.
 ---
 
 # Organize
 
 ## Overview
 
-Automates the four steps of the user's personal PARA/GTD system: capture, file,
-score, and review. Every step proposes an action and explains its reasoning;
-none of them touch a file until the user confirms. The skill always operates
-on `~/Projects/organize`, the user's real PARA repo.
+Automates the user's personal PARA/GTD system: capture, file, score, rank, and
+review. Capture is a single automatic step (rewrite and save); rank is
+read-only; file, score, and review each propose an action and wait for the
+user to confirm before touching a file. The skill always operates on
+`~/Projects/organize`, the user's real PARA repo.
 
 ## When to Use
 
-- The user runs `/organize` or `/organize <mode>` (`capture`, `file`, `score`, `review`).
+- The user runs `/organize` or `/organize <mode>` (`capture`, `file`, `score`, `rank`, `review`).
 - The user asks to jot down, capture, or log a new idea without saying where it belongs.
 - The user wants help sorting `INBOX.md` into Projects, Areas, Resources, or Archive.
-- The user wants Projects scored, re-scored, or ranked by Impact/Effort.
+- The user wants Projects scored or re-scored on Impact/Effort.
+- The user wants to see their current Projects ranked by Impact/Effort without re-scoring anything.
 - The user wants to run their periodic review (flag stale Projects, propose archiving).
 - NOT for editing arbitrary markdown files unrelated to `~/Projects/organize`.
 - NOT for deciding PARA taxonomy or scoring theory from scratch — this skill applies the definitions in `~/Projects/organize`'s own `GLOSSARY.md` if present, or the ones below.
@@ -70,20 +72,25 @@ invented by this skill.
 
 ## Core Process
 
-Determine the mode from the user's request (`capture`, `file`, `score`,
+Determine the mode from the user's request (`capture`, `file`, `score`, `rank`,
 `review`). If the user ran bare `/organize` with no mode and no clear intent,
 ask which mode they want.
 
 ### Mode: capture
 
-1. Take the idea exactly as the user stated it — do not ask what domain it's
-   in, what PARA bucket it belongs to, or add a score. Capture must stay
-   friction-free.
-2. Append it to `~/Projects/organize/INBOX.md` as a new bullet (or heading, if
-   the existing file uses headings — match what's already there). Add nothing
-   else.
-3. Confirm briefly that it was captured. Do not propose filing it now, even if
-   the destination seems obvious — filing is a separate mode.
+1. Rewrite the idea using the plain-language principles in
+   `docs/plain-language-iso24495.md`: short sentences, active voice, common
+   words over jargon, most-important-thing-first. Keep every fact, scenario,
+   and constraint the user stated — tighten the wording, don't cut content or
+   change meaning. Do not ask what domain it's in, what PARA bucket it
+   belongs to, or add a score. Capture must stay a single step: rewrite and
+   save without asking the user to approve the wording first.
+2. Append the rewritten idea to `~/Projects/organize/INBOX.md` as a new
+   bullet (or heading, if the existing file uses headings — match what's
+   already there). Add nothing else.
+3. Confirm briefly that it was captured, showing the rewritten wording so the
+   user can see what was saved. Do not propose filing it now, even if the
+   destination seems obvious — filing is a separate mode.
 
 ### Mode: file
 
@@ -112,10 +119,19 @@ ask which mode they want.
    anything.
 3. Once confirmed, add or update the `Impact: X  Effort: Y` line in that
    Project's file.
-4. After all requested Projects are scored, print a ranked list of every
-   scored Project (Quick Wins — high Impact, low Effort — first), and call
-   out any Thankless Task (low Impact, high Effort) with a one-line prompt to
-   reconsider it.
+4. After all requested Projects are scored, run Mode: rank to print the
+   updated ranked list.
+
+### Mode: rank
+
+1. Read every file in `1-projects/` that has an `Impact: X  Effort: Y` line.
+   If none do, say so and suggest running `/organize score` first.
+2. Print every scored Project as a table or list of Impact/Effort, ordered
+   with Quick Wins (high Impact, low Effort) first.
+3. Call out any Thankless Task (low Impact, high Effort) with a one-line
+   prompt to reconsider it.
+4. This mode is read-only — it never proposes or writes anything, so it
+   needs no confirmation step.
 
 ### Mode: review
 
@@ -141,6 +157,8 @@ ask which mode they want.
 | "I already asked about the first three inbox items, I can batch the rest" | Batching defeats the propose-then-confirm model — each item gets its own confirmation, no matter how repetitive the pattern looks. |
 | "The Project clearly hasn't been touched, I'll archive it" | Staleness is an observation; archiving is an action. Always propose the move and wait, even when the evidence looks conclusive. |
 | "Capture is basically filing, I can suggest a bucket while I'm at it" | Capture must stay zero-decision. Suggesting a bucket at capture time reintroduces the friction the lesson eliminated. |
+| "The rewrite drops a phrase, but it reads cleaner" | Plain-language rewriting is style-only — it may not drop facts, scenarios, or constraints from the original idea. If tightening the wording would lose content, keep the wording instead. |
+| "I should show the rewrite and ask before saving it" | Capture stays a single step — the rewrite happens automatically, is saved, and is shown to the user afterward for visibility, not beforehand for approval. |
 
 ## Red Flags
 

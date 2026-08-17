@@ -5,7 +5,8 @@
       { "prompt": "/organize capture: maybe build a small script that dedupes my bookmarks", "top_k": 1 },
       { "prompt": "can you go through my inbox and help me file everything into the right PARA folder", "top_k": 1 },
       { "prompt": "I've got three projects with no impact/effort score yet, can you help me score and rank them", "top_k": 1 },
-      { "prompt": "it's been two weeks, let's run my review and see what's gone stale", "top_k": 1 }
+      { "prompt": "it's been two weeks, let's run my review and see what's gone stale", "top_k": 1 },
+      { "prompt": "what does my current projects list look like ranked by impact and effort?", "top_k": 1 }
     ],
     "negative": [
       { "prompt": "restart the postgres container, it's stuck in a crash loop" },
@@ -17,13 +18,15 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "/organize capture: idea - write a small CLI that syncs my Obsidian vault to git automatically",
-      "expected_output": "The idea is appended verbatim to ~/Projects/organize/INBOX.md with no PARA bucket, domain, or score assigned, and the agent briefly confirms capture without proposing where it belongs.",
+      "prompt": "/organize capture: idea - so basically what I'm thinking is that it would be pretty useful if there was maybe a small CLI tool of some kind that could automatically go and sync my Obsidian vault over to git without me having to do it manually every time",
+      "expected_output": "The agent rewrites the idea in plain language (shorter, active voice, no filler like \"basically\" or \"pretty useful\", same facts preserved) and appends only that rewritten version to ~/Projects/organize/INBOX.md, with no PARA bucket, domain, or score assigned. It confirms capture and shows the rewritten wording, without proposing where the idea belongs.",
       "expectations": [
-        "The agent appends the idea to ~/Projects/organize/INBOX.md rather than any other file",
+        "The agent appends a rewritten, plain-language version of the idea to ~/Projects/organize/INBOX.md rather than the verbatim rambling original",
+        "The rewrite preserves the original fact (a CLI that auto-syncs an Obsidian vault to git) without adding or dropping content",
+        "The agent does not ask the user to approve the rewrite before saving it",
         "The agent does not ask which PARA bucket the idea belongs in or propose one unprompted",
         "The agent does not assign or discuss an Impact/Effort score during capture",
-        "The agent confirms the capture happened, briefly"
+        "The agent confirms the capture happened and shows the rewritten wording"
       ]
     },
     {
@@ -39,6 +42,17 @@
     },
     {
       "id": 3,
+      "prompt": "/organize rank",
+      "expected_output": "The agent reads every file under 1-projects/ that already has an Impact/Effort score and prints a ranked table/list, Quick Wins (high Impact, low Effort) first, flagging any Thankless Task (low Impact, high Effort). It does not score, re-score, propose changes, or write to any file — this mode is read-only.",
+      "expectations": [
+        "The agent lists only Projects that already have an Impact/Effort score, ordered with Quick Wins first",
+        "The agent flags any Thankless Task (low Impact, high Effort) with a one-line prompt to reconsider it",
+        "The agent does not propose or write an Impact/Effort score to any file during this mode",
+        "The agent does not ask for confirmation, since rank mode is read-only"
+      ]
+    },
+    {
+      "id": 4,
       "prompt": "/organize review",
       "expected_output": "The agent reads every file under 1-projects/, judges staleness from the ## Progress section with stated reasoning, proposes archiving stale/finished ones one at a time and waits for confirmation, and only updates REVIEW.md's Last/Next review dates after all flagged projects are resolved.",
       "expectations": [

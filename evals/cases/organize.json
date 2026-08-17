@@ -1,0 +1,52 @@
+{
+  "skill_name": "organize",
+  "trigger": {
+    "positive": [
+      { "prompt": "/organize capture: maybe build a small script that dedupes my bookmarks", "top_k": 1 },
+      { "prompt": "can you go through my inbox and help me file everything into the right PARA folder", "top_k": 1 },
+      { "prompt": "I've got three projects with no impact/effort score yet, can you help me score and rank them", "top_k": 1 },
+      { "prompt": "it's been two weeks, let's run my review and see what's gone stale", "top_k": 1 }
+    ],
+    "negative": [
+      { "prompt": "restart the postgres container, it's stuck in a crash loop" },
+      { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "owner": "create-skill" },
+      { "prompt": "write up a handoff doc so another agent can pick this up where I left off", "owner": "handoff" },
+      { "prompt": "teach me how impact/effort scoring works from first principles, I've never heard of it" }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/organize capture: idea - write a small CLI that syncs my Obsidian vault to git automatically",
+      "expected_output": "The idea is appended verbatim to ~/Projects/organize/INBOX.md with no PARA bucket, domain, or score assigned, and the agent briefly confirms capture without proposing where it belongs.",
+      "expectations": [
+        "The agent appends the idea to ~/Projects/organize/INBOX.md rather than any other file",
+        "The agent does not ask which PARA bucket the idea belongs in or propose one unprompted",
+        "The agent does not assign or discuss an Impact/Effort score during capture",
+        "The agent confirms the capture happened, briefly"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/organize file",
+      "expected_output": "For each item currently in ~/Projects/organize/INBOX.md, the agent proposes a PARA bucket with one-sentence reasoning, waits for confirmation on that specific item, and only then creates the filed file and removes the item from INBOX.md — one item at a time, not batched.",
+      "expectations": [
+        "The agent proposes a bucket (Project/Area/Resource/Archive) with reasoning before moving anything",
+        "The agent waits for explicit per-item confirmation rather than filing multiple inbox items off one approval",
+        "A confirmed item is written to the matching PARA folder using the documented file convention (title, description, Impact/Effort line only if already scored, ## Progress section)",
+        "The item is removed from INBOX.md only after its destination file is created"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/organize review",
+      "expected_output": "The agent reads every file under 1-projects/, judges staleness from the ## Progress section with stated reasoning, proposes archiving stale/finished ones one at a time and waits for confirmation, and only updates REVIEW.md's Last/Next review dates after all flagged projects are resolved.",
+      "expectations": [
+        "The agent states staleness reasoning per project rather than asserting it without evidence",
+        "The agent proposes archiving and waits for confirmation before moving any file to 4-archive/",
+        "REVIEW.md is not updated until every flagged project has been addressed",
+        "The agent does not promise or set up an automatic/scheduled reminder for the next review"
+      ]
+    }
+  ]
+}

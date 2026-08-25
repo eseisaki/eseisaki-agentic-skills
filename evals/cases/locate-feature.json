@@ -1,0 +1,42 @@
+{
+  "skill_name": "locate-feature",
+  "trigger": {
+    "positive": [
+      { "prompt": "/locate-feature what handles Alternative Proof?", "top_k": 1 },
+      { "prompt": "/locate-feature where is IEAT451A processed?", "top_k": 1 },
+      { "prompt": "/locate-feature which service creates this outgoing message: {\"type\":\"COVERAGE_UPDATED\"}", "top_k": 1 },
+      { "prompt": "/locate-feature no idea where this validation rule for policy renewal dates lives, can you track it down", "top_k": 1 },
+      { "prompt": "/locate-feature I'm getting error code ERR-4471 on submit, find what raises it", "top_k": 1 }
+    ],
+    "negative": [
+      { "prompt": "restart the postgres container, it's stuck in a crash loop" },
+      { "prompt": "I keep re-explaining the same code review checklist to Claude every session, can we turn that into a proper skill?", "owner": "create-skill" },
+      { "prompt": "write up a handoff doc so another agent can pick this up where I left off", "owner": "handoff" },
+      { "prompt": "quick, off the top of your head, do you happen to remember which file we edited yesterday for the retry logic?" },
+      { "prompt": "teach me how this codebase's module system works from first principles", "owner": "teach" }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/locate-feature what handles Alternative Proof?",
+      "expected_output": "The agent dispatches a single generic subagent with the embedded investigation briefing (question filled in, read-only constraint, five-section output format) and relays the subagent's report back verbatim, without doing its own separate exploration in the main conversation.",
+      "expectations": [
+        "The agent dispatches a subagent (e.g. via the Agent tool) rather than searching the repo itself in the main conversation",
+        "The dispatch prompt includes the investigation strategy (anchors, cheap search first, progressive narrowing, evidence-based tracing) and a read-only/no-edit constraint",
+        "The dispatch prompt does not hardcode a specific tech stack (e.g. does not assume Java/Spring unless the question itself named it)",
+        "The final report returned to the user has exactly the five sections: Likely owner, Functionality path, Evidence, Unknowns, Next best action",
+        "The agent does not perform its own additional file edits or writes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/locate-feature",
+      "expected_output": "Since no question was given, the agent asks the user what they want located instead of dispatching a subagent on an empty query.",
+      "expectations": [
+        "The agent asks a clarifying question for the missing investigation target",
+        "The agent does not dispatch a subagent before a question is provided"
+      ]
+    }
+  ]
+}
